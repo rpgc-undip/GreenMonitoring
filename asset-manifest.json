@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/GreenMonitoring/static/css/main.de02d657.css",
+    "main.js": "/GreenMonitoring/static/js/main.bb8a1aaf.js",
+    "static/media/digital7.ttf": "/GreenMonitoring/static/media/digital7.79c8511a32aab83743b7.ttf",
+    "index.html": "/GreenMonitoring/index.html",
+    "main.de02d657.css.map": "/GreenMonitoring/static/css/main.de02d657.css.map",
+    "main.bb8a1aaf.js.map": "/GreenMonitoring/static/js/main.bb8a1aaf.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.de02d657.css",
+    "static/js/main.bb8a1aaf.js"
+  ]
+}
