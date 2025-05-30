@@ -1,0 +1,4 @@
+git add .
+git commit -m "Fix logo paths for GitHub Pages"
+git push origin main
+npm run deploy

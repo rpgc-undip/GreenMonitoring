@@ -1,0 +1,32 @@
+function updateFirebase() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');
+  var headers = sheet.getRange('D1:E1').getValues()[0];
+  var values = sheet.getRange('D2:E2').getValues()[0];
+
+  var category = "VEHICLE_COUNTER";  // Use underscore instead of space
+  var firebaseUrl = "https://iot-project-e32e9-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+  var cardData = {};
+  headers.forEach((header, i) => {
+    const key = `card${String(i + 1).padStart(2, '0')}`; // card01, card02
+    cardData[key] = {
+      title: header,
+      value: values[i]
+    };
+  });
+
+  var options = {
+    method: "put",
+    contentType: "application/json",
+    payload: JSON.stringify(cardData),
+    muteHttpExceptions: true
+  };
+
+  var endpoint = `${firebaseUrl}/cards/${category}.json`;
+  try {
+    var response = UrlFetchApp.fetch(endpoint, options);
+    Logger.log(response.getContentText());
+  } catch (e) {
+    Logger.log("Error: " + e);
+  }
+}

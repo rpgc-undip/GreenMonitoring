@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.leaflet-tooltip {
+    background-color: #ff5e00 !important; /* Dark Blue */
+    color: rgb(0, 0, 0) !important;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgb(0, 0, 0);
+  }
+@font-face {
+  font-family: 'Digital-7 Mono';
+  src: url('/public/fonts/digital7.ttf') format('truetype');
+}
+.lcd-background {
+  background-color: #0b1f0b;
+  box-shadow:
+    inset 3px 3px 6px #2e7c2e,
+    inset -3px -3px 6px #67d467;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  color: #a5ff94;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  
+  width: 8ch;          /* width for 5 digits plus some space */
+  text-align: right;   /* right justify text */
+}
+

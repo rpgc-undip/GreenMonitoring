@@ -1,0 +1,90 @@
+const FIREBASE_URL = 'https://iot-project-e32e9-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+function pushSpecificRangeToFirebase() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const category = "ELECTRICITY";
+
+  // === 1. PUSH CARD DATA FROM "Sheet1" ===
+  const cardSheet = ss.getSheetByName("Sheet1");
+
+  const headers = cardSheet.getRange("Q2:AF2").getValues()[0];
+  const values = cardSheet.getRange("Q3:AF3").getValues()[0];
+
+  const cardData = {};
+
+  headers.forEach((header, i) => {
+    const key = `card${String(i + 1).padStart(2, '0')}`;
+    cardData[key] = {
+      title: header,
+      value: values[i]
+    };
+  });
+
+  const cardOptions = {
+    method: 'put',
+    contentType: 'application/json',
+    payload: JSON.stringify(cardData),
+    muteHttpExceptions: true
+  };
+
+  const cardEndpoint = `${FIREBASE_URL}/cards/${category}.json`;
+  UrlFetchApp.fetch(cardEndpoint, cardOptions);
+
+  // === 2. PUSH CHART DATA FROM "2025" SHEET ===
+  const chartSheet = ss.getSheetByName("2025");
+
+  const xAxis = chartSheet.getRange("A5:A35").getValues().flat();   // x-axis
+  const y1 = chartSheet.getRange("J5:J35").getValues().flat();     // y1 
+  const y2 = chartSheet.getRange("O5:O35").getValues().flat();     // y2
+  const y3 = chartSheet.getRange("T5:T35").getValues().flat();     // y3
+
+  while (y1.length < xAxis.length) y1.push(0);
+
+  const chartData = xAxis.map((x, i) => ({
+    x,
+    y1: y1[i],
+    y2: y2[i],
+    y3: y3[i]
+  }));
+
+  const chartOptions = {
+    method: 'put',
+    contentType: 'application/json',
+    payload: JSON.stringify(chartData),
+    muteHttpExceptions: true
+  };
+
+  const chartEndpoint = `${FIREBASE_URL}/charts/${category}.json`;
+  const chartResponse = UrlFetchApp.fetch(chartEndpoint, chartOptions);
+  Logger.log(chartResponse.getContentText());
+
+  // === 3. PUSH COMBINED CHART DATA FROM "DailyPower" SHEET ===
+const dailyPowerSheet = ss.getSheetByName("DailyPower");
+
+// First dataset
+const dpXAxis1 = dailyPowerSheet.getRange("H2:H25").getValues().flat(); // x1
+const dpY1 = dailyPowerSheet.getRange("I2:I25").getValues().flat();     // y1
+
+// Second dataset
+const dpXAxis2 = dailyPowerSheet.getRange("L2:L25").getValues().flat(); // x2
+const dpY2 = dailyPowerSheet.getRange("M2:M25").getValues().flat();     // y2
+
+// Combine into single chart data
+const dailyCombinedChartData = dpXAxis1.map((x1, i) => ({
+  x: x1,            // Primary x-axis (you can change to dpXAxis2[i] if needed)
+  y1: dpY1[i],      // First data series
+  y2: dpY2[i],      // Second data series
+}));
+
+const dailyCombinedChartOptions = {
+  method: 'put',
+  contentType: 'application/json',
+  payload: JSON.stringify(dailyCombinedChartData),
+  muteHttpExceptions: true
+};
+
+const dailyCombinedChartEndpoint = `${FIREBASE_URL}/charts/ELECTRICITY_DAILY_POWER.json`;
+const dailyCombinedChartResponse = UrlFetchApp.fetch(dailyCombinedChartEndpoint, dailyCombinedChartOptions);
+Logger.log(dailyCombinedChartResponse.getContentText());
+
+}

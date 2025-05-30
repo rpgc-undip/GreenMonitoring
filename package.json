@@ -1,0 +1,49 @@
+{
+  "name": "react-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "React dashboard with Tailwind CSS",
+  "homepage": "https://semarjaya25.github.io/GreenMonitoring",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "autoprefixer": "^10.4.0",
+    "firebase": "^11.6.1",
+    "framer-motion": "^12.10.5",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.507.0",
+    "postcss": "^8.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-gauge-component": "^1.2.64",
+    "react-leaflet": "^4.2.1",
+    "react-scripts": "^5.0.1",
+    "recharts": "^2.15.3",
+    "tailwindcss": "^3.0.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}
