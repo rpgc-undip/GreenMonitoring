@@ -69,6 +69,30 @@ const GaugeDisplay = ({
   y4: "Total Mot",
   };
 
+const CustomTooltipUniversal = (legendMap, vividColors = []) => ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white border p-2 rounded shadow text-xs text-gray-800">
+        <div className="font-semibold mb-1">{label}</div>
+        {payload.map((entry, index) => {
+          const key = entry.dataKey.split("_")[1];
+          const color = entry.stroke || vividColors[index] || "#333"; // 🔑 Ambil stroke → fallback vividColors[index] → fallback #333
+          return (
+            <div key={index} className="flex justify-between gap-2">
+              <span style={{ color }}>{legendMap[key] || key}</span>
+              <span>{entry.value}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  return null;
+};
+
+
+
+
 useEffect(() => {
   const STORAGE_KEY_VALUE = "noaaDataValue";
   const STORAGE_KEY_DATE = "noaaDataLastFetch";
@@ -295,7 +319,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
               <XAxis dataKey="x" />
               <YAxis
                 label={{
-                  value: 'MWh',
+                  value: 'kWh',
                   angle: -90,
                   position: 'insideLeft',
                   offset: 0,
@@ -378,7 +402,8 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                   style: { fill: ' #6b7280', fontSize: 14, textAnchor: 'middle'}
                 }}
               />
-              <Tooltip />
+
+              <Tooltip content={CustomTooltipUniversal(legendCO2, vividColors)} />
               <Legend content={renderLegendCO2} />
               <Customized
                 component={({ width, height }) => (
@@ -438,7 +463,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
               <XAxis dataKey="x" />
               <YAxis
                 label={{
-                  value: 'kiloLitres',
+                  value: 'Liter',
                   angle: -90,
                   position: 'insideLeft',
                   offset: 0,
@@ -522,7 +547,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                 }}
               />
 
-              <Tooltip />
+              <Tooltip content={CustomTooltipUniversal(legendVeh, vividColors)} />
               <Legend content={renderLegendVeh} />
 
               <Customized
