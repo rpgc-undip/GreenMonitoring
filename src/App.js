@@ -38,7 +38,6 @@ const waterLocation = [
   { lat: -7.048236647661722, lng: 110.43837163176853, label: "Sensor Location" }
 ];
 
-
 function formatDateToGMT7(isoString) {
   const date = new Date(isoString);
   const gmt7 = new Date(date.getTime() + 7 * 60 * 60 * 1000);
@@ -226,29 +225,12 @@ useEffect(() => {
       }
     }
   });
-
-  // Fetch current Vehicle Count for lcd meter display
-  const vehicleCountRef = ref(database, `cards/VEHICLE_COUNTER/card02`);
-  const unsubscribeVehicleCount = onValue(vehicleCountRef, (snapshot) => {
-    const row = snapshot.val();
-    if (!row) return;
-    const secondValue = row.value ?? row.value2 ?? null;
-    if (secondValue !== null) {
-      const numericValue = parseFloat(secondValue);
-      if (!isNaN(numericValue)) {
-        setVehicleCountForLCD(numericValue);
-      }
-    }
-  });
   
   const pivotElectricityRef = ref(database, "charts/ELECTRICITY_PIVOT");
   const unsubscribePivotEl = onValue(pivotElectricityRef, (snapshot) => {
       const dataEl = snapshot.val();
       if (dataEl) {
-        const cleanDataEl = dataEl.filter(
-          (d) => d.x !== undefined && d.y !== undefined && d.series
-        );
-        setPivotElChart(cleanDataEl);
+        setPivotElChart(dataEl);
       }
     });
 
@@ -257,7 +239,6 @@ useEffect(() => {
       const dataCO2 = snapshot.val();
       if (dataCO2) {
         setPivotCO2Chart(dataCO2);
-        
       }
     });
 
@@ -265,10 +246,7 @@ useEffect(() => {
   const unsubscribePivotWater = onValue(pivotWaterRef, (snapshot) => {
       const dataWater = snapshot.val();
       if (dataWater) {
-        const cleanDataWater = dataWater.filter(
-          (d) => d.x !== undefined && d.y !== undefined && d.series
-        );
-        setPivotWaterChart(cleanDataWater);
+        setPivotWaterChart(dataWater);
       }
     });
 
@@ -276,17 +254,13 @@ const pivotVehRef = ref(database, "charts/VEHICLE_PIVOT");
   const unsubscribePivotVeh = onValue(pivotVehRef, (snapshot) => {
       const dataVeh = snapshot.val();
       if (dataVeh) {
-        const cleanDataVeh = dataVeh.filter(
-          (d) => d.x !== undefined && d.y !== undefined && d.series
-        );
-        setPivotVehChart(cleanDataVeh);
+        setPivotVehChart(dataVeh);
       }
     });
 
 
   return () => {
     unsubscribeCO2();
-    unsubscribeVehicleCount();
     unsubscribePivotEl();
     unsubscribePivotWater();
     unsubscribePivotCO2();
