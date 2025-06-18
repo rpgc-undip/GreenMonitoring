@@ -337,7 +337,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                     fill="black"
                     fontSize={12}
                   >
-                    Note: The rightmost x-axis index is current time
+                    
                   </text>
                 )}
               />
@@ -414,7 +414,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                     fill="black"
                     fontSize={12}
                   >
-                    Note: The rightmost x-axis index is current time
+                    
                   </text>
                 )}
               />
@@ -481,7 +481,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                     fill="black"
                     fontSize={12}
                   >
-                    Note: The rightmost x-axis index is current time
+                    
                   </text>
                 )}
               />
@@ -559,7 +559,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                     fill="black"
                     fontSize={12}
                   >
-                    Note: The rightmost x-axis index is current time
+                    
                   </text>
                 )}
               />
@@ -763,7 +763,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                       fill="black"
                       fontSize={12}
                     >
-                      Note: The rightmost x-axis index is current time
+                     
                     </text>
                   )}
                 />
