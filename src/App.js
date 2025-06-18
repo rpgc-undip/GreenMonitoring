@@ -313,6 +313,58 @@ useEffect(() => {
 }, [startAutoCycle]);
 
 
+// === SAVE FUNCTION DITARUH DI SINI ===
+  const saveDataToFile = () => {
+    const now = new Date();
+    const offset = 7 * 60; // GMT+7 → 7 jam × 60 menit
+    const localTime = new Date(now.getTime() + offset * 60 * 1000);
+
+    const timestamp = localTime
+      .toISOString()
+      .replace('T', ' ')
+      .replace(/\.\d+Z$/, '');
+
+    const dataToSave = {
+      timestamp, // Sudah GMT+7
+      electricity: pivotElChart,
+      co2: pivotCO2Chart,
+      water: pivotWaterChart,
+      vehicle: pivotVehChart,
+    };
+
+    const blob = new Blob([JSON.stringify(dataToSave, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    const filename = `backup_${localTime.getFullYear()}-${String(
+      localTime.getMonth() + 1
+    ).padStart(2, "0")}-${String(localTime.getDate()).padStart(2, "0")}.json`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    };
+
+  useEffect(() => {
+    const checkAndBackup = () => {
+      const now = new Date();
+      const isFirstOfMonth = now.getDate() === 1;
+      const isMidnight = now.getHours() === 0 && now.getMinutes() === 0;
+
+      if (isFirstOfMonth && isMidnight) {
+        saveDataToFile();
+      }
+    };
+
+    const intervalId = setInterval(checkAndBackup, 60 * 1000); // Cek tiap menit
+    return () => clearInterval(intervalId);
+  }, [pivotElChart, pivotCO2Chart, pivotWaterChart, pivotVehChart]);
+
+
   return (
     <div className="flex min-h-screen">
       <Sidebar
@@ -366,6 +418,15 @@ useEffect(() => {
                 secondBarValue={co2ValueForGauge}
                 lcdValues={vehicleCountForLCD}
               />
+                {/* Tombol download manual */}
+              <div className="mt-4">
+                <button
+                  onClick={saveDataToFile}
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                >
+                  Download Chart Data
+                </button>
+              </div>
             </section>
           )}
 

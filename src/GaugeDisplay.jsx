@@ -250,14 +250,14 @@ const renderLegendVeh = (props) => {
 
 const carbonSeriesData = elCarbonData.map((item, index) => ({
   x: item.x,
-  carbonEl: (item[`${selectedSeriesCarbon}_y1`] || 0) * 0.29,    // tonCO2/MWh
+  carbonEl: (item[`${selectedSeriesCarbon}_y1`] || 0) * 0.29 / 1000,    // 0.29 -> tonCO2/MWh
   carbonCar: vehCarbonData[index]?.[`${selectedSeriesCarbon}_y3`] * 0.1842 / 1000 || 0,  // tonCO2/km
   carbonMot: vehCarbonData[index]?.[`${selectedSeriesCarbon}_y4`] * 0.0555 / 1000 || 0,  // tonCO2/km
 }));
 
-
+//untuk cards carbon footprint
 const monthElData = chartDataEl?.month || [];
-const totalMonthEl = monthElData.reduce((acc, curr) => acc + (Number(curr.month_y1)  || 0), 0) * 0.29;
+const totalMonthEl = monthElData.reduce((acc, curr) => acc + (Number(curr.month_y1)  || 0), 0) * 0.29 / 1000;
 
 const monthVehData = chartDataVeh?.month || [];
 const totalMonthCar = monthVehData.reduce((acc, curr) => acc + (Number(curr.month_y3) || 0), 0) * 0.1842 / 1000;
