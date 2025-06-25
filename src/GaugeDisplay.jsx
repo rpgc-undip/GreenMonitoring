@@ -44,8 +44,8 @@ const GaugeDisplay = ({
   const vehCarbonData = chartDataVeh?.[selectedSeriesCarbon] || [];
   
   const seriesKeysCO2 = ["y1", "y2", "y3", "y4", "avg"];
-  const seriesKeysVeh = ["y1", "y2", "y3", "y4"];
-  const vividColors = [" #FF851B", " #2ECC40" , " #0074D9", " #FFDC00", " #B10DC9"];
+  const seriesKeysVeh = ["y1", "y2", "y3", "y4", "y5", "y6"];
+  const vividColors = [" #FF851B", " #2ECC40" , " #0074D9", " #FFDC00", " #B10DC9", " #6E260E"];
 
   const legendNames = {
   hour: "Last 48 hours",
@@ -65,8 +65,10 @@ const GaugeDisplay = ({
   const legendVeh = {
   y1: "Car/min",
   y2: "Mot/min",
-  y3: "Total Car",
-  y4: "Total Mot",
+  y3: "Truck/min",
+  y4: "Total Car",
+  y5: "Total Mot",
+  y6: "Total Truck",
   };
 
 const CustomTooltipUniversal = (legendMap, vividColors = []) => ({ active, payload, label }) => {
@@ -248,11 +250,17 @@ const renderLegendVeh = (props) => {
   };
 
 
+const elKwhCostData = (chartDataEl?.[selectedSeriesEl] || []).map(item => ({
+  ...item,
+  cost: Math.round(((item[`${selectedSeriesEl}_y1`] || 0) * 925 / 1000000) * 100) / 100
+}));
+
 const carbonSeriesData = elCarbonData.map((item, index) => ({
   x: item.x,
-  carbonEl: (item[`${selectedSeriesCarbon}_y1`] || 0) * 0.29 / 1000,    // 0.29 -> tonCO2/MWh
-  carbonCar: vehCarbonData[index]?.[`${selectedSeriesCarbon}_y3`] * 0.1842 / 1000 || 0,  // tonCO2/km
-  carbonMot: vehCarbonData[index]?.[`${selectedSeriesCarbon}_y4`] * 0.0555 / 1000 || 0,  // tonCO2/km
+  carbonEl: Math.round(((item[`${selectedSeriesCarbon}_y1`] || 0) * 0.29 / 1000) * 100) / 100, // 0.29 -> tonCO2/MWh
+  carbonCar: Math.round(((vehCarbonData[index]?.[`${selectedSeriesCarbon}_y4`] || 0) * 0.1842 / 1000) * 100) / 100, // tonCO2/km
+  carbonMot: Math.round(((vehCarbonData[index]?.[`${selectedSeriesCarbon}_y5`] || 0) * 0.0555 / 1000) * 100) / 100, // tonCO2/km
+  carbonTruck: Math.round(((vehCarbonData[index]?.[`${selectedSeriesCarbon}_y6`] || 0) * 0.1842 / 1000) * 100) / 100, // tonCO2/km
 }));
 
 //untuk cards carbon footprint
@@ -260,9 +268,10 @@ const monthElData = chartDataEl?.month || [];
 const totalMonthEl = monthElData.reduce((acc, curr) => acc + (Number(curr.month_y1)  || 0), 0) * 0.29 / 1000;
 
 const monthVehData = chartDataVeh?.month || [];
-const totalMonthCar = monthVehData.reduce((acc, curr) => acc + (Number(curr.month_y3) || 0), 0) * 0.1842 / 1000;
-const totalMonthMot = monthVehData.reduce((acc, curr) => acc + (Number(curr.month_y4) || 0), 0) * 0.0555 / 1000;
-const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
+const totalMonthCar = monthVehData.reduce((acc, curr) => acc + (Number(curr.month_y4) || 0), 0) * 0.1842 / 1000;
+const totalMonthMot = monthVehData.reduce((acc, curr) => acc + (Number(curr.month_y5) || 0), 0) * 0.0555 / 1000;
+const totalMonthTruck = monthVehData.reduce((acc, curr) => acc + (Number(curr.month_y6) || 0), 0) * 0.1842 / 1000;
+const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar + totalMonthTruck;
 
   return (
     <div className="flex flex-col gap-6">
@@ -315,7 +324,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
           </div>
 
           <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={elChartData}>
+            <BarChart data={elKwhCostData}>
               <XAxis dataKey="x" />
               <YAxis
                 label={{
@@ -325,6 +334,20 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                   offset: 0,
                   style: { fill: ' #6b7280', fontSize: 14, textAnchor: 'middle'}
                 }}
+              />
+
+              {/* Y-axis kanan: Electric Cost */}
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                label={{
+                  value: 'Million Rp',
+                  angle: -90,
+                  position: 'insideRight',
+                  offset: 5,
+                  style: { fill: '#6b7280', fontSize: 14, textAnchor: 'middle' }
+                }}
+                tickFormatter={(value) => value.toFixed(2)}
               />
               <Tooltip />
               <Legend content={renderLegend} />
@@ -347,7 +370,15 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                 fill={vividColors[0]}
                 barSize={30}
               />
+              <Bar
+                yAxisId="right"
+                dataKey="cost"
+                name="Electric Cost"
+                fill={vividColors[1]}
+                barSize={20}
+              />
             </BarChart>
+            
           </ResponsiveContainer>
         </div>
 
@@ -571,7 +602,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                   name={legendNames[selectedSeriesVeh][key]}
                   fill={vividColors[index]}
                   barSize={30}
-                  yAxisId={["y3", "y4"].includes(key) ? "left" : "right"} // 🔁 Ditukar → y3 & y4 → kiri (TOTAL), y1 & y2 → kanan (Per Minute)
+                  yAxisId={["y4", "y5", "y6"].includes(key) ? "left" : "right"} // 🔁 Ditukar → y3 & y4 → kiri (TOTAL), y1 & y2 → kanan (Per Minute)
                 />
               ))}
             </BarChart>
@@ -644,7 +675,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
           <div className="bg-white shadow-lg rounded-2xl p-6 min-w-[100px]">
               <h2 className="text-sm font-bold mb-4 text-gray-800 text-center flex items-center justify-center gap-2">
                 <FontAwesomeIcon icon={faCloud} className="text-gray-500" />
-                CO₂ from Cars
+                CO₂ from Cars+Trucks
                 <FontAwesomeIcon icon={faCarSide} className="text-teal-500" />
               </h2>
             {monthVehData.length === 0 ? (
@@ -654,7 +685,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                 <div className="text-center space-y-3">
                   <p className="text-gray-500 text-xs">Daily Cumulative</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {isNaN(totalMonthCar) ? '0' : totalMonthCar.toFixed(2)} 
+                    {isNaN(totalMonthCar + totalMonthTruck) ? '0' : (totalMonthCar + totalMonthTruck).toFixed(2)} 
                   </p>
                   <p className="text-gray-500 text-sm">ton CO₂</p>
                 </div>
@@ -782,7 +813,7 @@ const totalCO2 = totalMonthEl + totalMonthMot + totalMonthCar;
                 <Area
                   type="monotone"
                   dataKey="carbonCar"
-                  name="Car"
+                  name="Car + Truck"
                   stroke="#44bf97"
                   fill="url(#colorCar)"
                   yAxisId="right"
