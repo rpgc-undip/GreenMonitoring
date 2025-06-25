@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/GreenMonitoring/static/css/main.04521d28.css",
-    "main.js": "/GreenMonitoring/static/js/main.4dc5c95e.js",
+    "main.js": "/GreenMonitoring/static/js/main.e96a1393.js",
     "static/media/digital7.ttf": "/GreenMonitoring/static/media/digital7.79c8511a32aab83743b7.ttf",
     "index.html": "/GreenMonitoring/index.html",
     "main.04521d28.css.map": "/GreenMonitoring/static/css/main.04521d28.css.map",
-    "main.4dc5c95e.js.map": "/GreenMonitoring/static/js/main.4dc5c95e.js.map"
+    "main.e96a1393.js.map": "/GreenMonitoring/static/js/main.e96a1393.js.map"
   },
   "entrypoints": [
     "static/css/main.04521d28.css",
-    "static/js/main.4dc5c95e.js"
+    "static/js/main.e96a1393.js"
   ]
 }
