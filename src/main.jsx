@@ -38,6 +38,8 @@ import './styles.css';
 const sheetCsvUrl = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL;
 const sheetId = import.meta.env.VITE_GOOGLE_SHEET_ID;
 const sheetGid = import.meta.env.VITE_GOOGLE_SHEET_GID || '0';
+const baseUrl = import.meta.env.BASE_URL || '/';
+const asset = (path) => `${baseUrl}${path.replace(/^\//, '')}`;
 const electricitySheetRange = 'A3:P3';
 const electricityDataSources = [
   { locationIndex: 0, label: 'Rektorat', sheetId: '1AB5faE_-2SRwa4OaCKoelrmmaZFWLSuXNXUpMZAGM1U', gid: '1826479543' },
@@ -197,10 +199,10 @@ const alertCategories = {
   other: { label: 'Other', icon: Wifi, tone: 'neutral' },
 };
 const summaryArtwork = {
-  electricity: '/summary/electricity-trim.png',
-  water: '/summary/water-trim.png',
-  co2: '/summary/co2-trim.png',
-  vehicle: '/summary/vehicle-trim.png',
+  electricity: asset('/summary/electricity-trim.png'),
+  water: asset('/summary/water-trim.png'),
+  co2: asset('/summary/co2-trim.png'),
+  vehicle: asset('/summary/vehicle-trim.png'),
 };
 const summaryExpectedSites = ['Rektorat', 'SV', 'FH', 'FISIP', 'FEB', 'FT'];
 
@@ -2361,7 +2363,7 @@ function HowItWorksPage() {
           </p>
         </div>
         <div className="howItWorksHeroVisual">
-          <img src="/logos/system_overview.png" alt="System overview diagram" />
+          <img src={asset('/logos/system_overview.png')} alt="System overview diagram" />
         </div>
         <div className="howItWorksFlow" aria-label="End-to-end data flow">
           {flowSteps.map((step, index) => (
@@ -2559,7 +2561,7 @@ function App() {
           </button>
 
           <div className="titleGroup">
-            <img className="mainHeaderLogo" src="/logos/undip-emblem.png" alt="Universitas Diponegoro emblem" />
+            <img className="mainHeaderLogo" src={asset('/logos/undip-emblem.png')} alt="Universitas Diponegoro emblem" />
             <div>
               <h1>UNDIP GREEN MONITORING</h1>
               <p>{pageDescription}</p>
@@ -2569,16 +2571,16 @@ function App() {
           <div className="headerTools">
             <div className="partnerLogos" aria-label="Partner logos">
               <span className="partnerLogoTile dark">
-                <img src="/logos/undip-wordmark.png" alt="Universitas Diponegoro" />
+                <img src={asset('/logos/undip-wordmark.png')} alt="Universitas Diponegoro" />
               </span>
               <span className="partnerLogoTile">
-                <img src="/logos/rpggc.png" alt="Directorate of Reputation, Partnership, and Global Connectivity" />
+                <img src={asset('/logos/rpggc.png')} alt="Directorate of Reputation, Partnership, and Global Connectivity" />
               </span>
               <span className="partnerLogoTile">
-                <img src="/logos/sdgs.png" alt="Sustainable Development Goals" />
+                <img src={asset('/logos/sdgs.png')} alt="Sustainable Development Goals" />
               </span>
               <span className="partnerLogoTile">
-                <img src="/logos/greenmetric.png" alt="UI GreenMetric" />
+                <img src={asset('/logos/greenmetric.png')} alt="UI GreenMetric" />
               </span>
             </div>
             <div className="dateBox">
@@ -3203,7 +3205,7 @@ function ReportCover({ endDate, generatedAt, location, reportTitle, startDate })
   return (
     <header className="reportCover">
       <div className="reportBrandLine">
-        <img src="/logos/undip-emblem.png" alt="Universitas Diponegoro emblem" />
+        <img src={asset('/logos/undip-emblem.png')} alt="Universitas Diponegoro emblem" />
         <div>
           <strong>UNDIP GREEN MONITORING</strong>
           <span>Integrated Metering System powered by Internet of Things</span>
@@ -3893,7 +3895,7 @@ function WeatherPage() {
     <>
       <section className="summaryPageHeader">
         <div className="summaryPageHeaderTitle">
-          <img className="weatherHeaderLogo" src="/logos/logo_weather.png" alt="Weather logo" />
+          <img className="weatherHeaderLogo" src={asset('/logos/logo_weather.png')} alt="Weather logo" />
           <div>
             <h2>Weather — Tembalang, Semarang</h2>
             <p>Latest weather conditions and forecast for the campus area.</p>
@@ -5306,25 +5308,25 @@ function CarbonFootprintPage() {
     + getSeriesTotalValue(monthlyVehicleSeries, 'motorcycles');
   const avoidedCards = [
     {
-      artwork: '/carbon/equivalencies/waste-recycled.png',
+      artwork: asset('/carbon/equivalencies/waste-recycled.png'),
       icon: Recycle,
       label: 'tons of waste recycled instead of landfilled',
       value: monthlyTotalValue / epaEquivalencyFactors.wasteRecycledTon,
     },
     {
-      artwork: '/carbon/equivalencies/trash-bags.png',
+      artwork: asset('/carbon/equivalencies/trash-bags.png'),
       icon: Trash2,
       label: 'trash bags of waste recycled instead of landfilled',
       value: monthlyTotalValue / epaEquivalencyFactors.trashBagTon,
     },
     {
-      artwork: '/carbon/equivalencies/garbage-truck.png',
+      artwork: asset('/carbon/equivalencies/garbage-truck.png'),
       icon: Trash2,
       label: 'garbage trucks of waste recycled instead of landfilled',
       value: monthlyTotalValue / epaEquivalencyFactors.garbageTruckTon,
     },
     {
-      artwork: '/carbon/equivalencies/wind-turbine.png',
+      artwork: asset('/carbon/equivalencies/wind-turbine.png'),
       icon: Wind,
       label: 'wind turbines running for a year',
       value: monthlyTotalValue / epaEquivalencyFactors.windTurbineTonPerYear,
@@ -5332,13 +5334,13 @@ function CarbonFootprintPage() {
   ];
   const sequesteredCards = [
     {
-      artwork: '/carbon/equivalencies/tree-seedlings.png',
+      artwork: asset('/carbon/equivalencies/tree-seedlings.png'),
       icon: Sprout,
       label: 'tree seedlings grown for 10 years',
       value: monthlyTotalValue / epaEquivalencyFactors.treeSeedlingTenYearsTon,
     },
     {
-      artwork: '/carbon/equivalencies/forest-acre.png',
+      artwork: asset('/carbon/equivalencies/forest-acre.png'),
       icon: Trees,
       label: 'acres of U.S. forests in one year',
       value: monthlyTotalValue / epaEquivalencyFactors.acresForestTonPerYear,
@@ -5358,28 +5360,28 @@ function CarbonFootprintPage() {
           label="Daily Cumulative"
           value={formatCarbonValue(totalDailyValue)}
           tone="blue"
-          artwork="/carbon/daily-cumulative.png"
+          artwork={asset('/carbon/daily-cumulative.png')}
         />
         <Metric
           icon={Zap}
           label="CO₂ from Electricity"
           value={formatCarbonValue(electricityDailyValue)}
           tone="amber"
-          artwork="/carbon/electricity.png"
+          artwork={asset('/carbon/electricity.png')}
         />
         <Metric
           icon={Car}
           label="CO₂ from Cars+Trucks"
           value={formatCarbonValue(carsTrucksDailyValue)}
           tone="red"
-          artwork="/carbon/cars-trucks.png"
+          artwork={asset('/carbon/cars-trucks.png')}
         />
         <Metric
           icon={Car}
           label="CO₂ from Motorcycles"
           value={formatCarbonValue(motorcyclesDailyValue)}
           tone="green"
-          artwork="/carbon/motorcycle.png"
+          artwork={asset('/carbon/motorcycle.png')}
         />
       </section>
 
